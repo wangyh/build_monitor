@@ -7,11 +7,10 @@ http.createServer(function (request, response){
 	log('----------------------------------------------');
 	log('new requst for {0}, callback: {1}, contentType: {2}', params.url, params.callback, params.contentType);
 	getJson(params.url, function(statuscode,headers, body){
-		var responseBody = params.contentType === 'xml' ?
-			str("{0}('{1}')", params.callback, body) :
-			str("{0}({1})", params.callback, body);
+		var responseBody = str("{0}({1})", params.callback, params.contentType === 'xml' ? JSON.stringify(require('./lib/xml2json').xml2json.parser(body)) : body);
 		headers["Content-Length"] = responseBody.length;
-		log('send back: {0}', JSON.stringify(headers));
+		log('send back: {0} \n{1}', JSON.stringify(headers), responseBody);
+		
 		response.writeHead(statuscode, headers);
 		response.end(responseBody);
 	});
@@ -38,7 +37,7 @@ function getJson(url, callback){
 	log('requesting {0}...', url);
 	log(JSON.stringify(config));
 	var header = {'host': config.host};
-	if(config.auth.length > 0){
+	if(config.auth){
 		header["Authorization"] = "Basic " + new Buffer(config.auth).toString('base64');
 		log('header:{0}' , JSON.stringify(header));
 	}

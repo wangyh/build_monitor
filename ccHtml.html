@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="http://code.jquery.com/jquery-1.4.4.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="src/providers/cruiseFeedProvider.js" type="text/javascript" charset="utf-8"></script>
+	<script src="src/deamon.js" type="text/javascript" charset="utf-8"></script>
+	<script src="src/handlers/statusView.js" type="text/javascript" charset="utf-8"></script>
+	<script src="src/handlers/simpleView.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+	<script type="text/javascript" charset="utf-8">
+	var feedUrl = 'http://localhost:7777/?url=http://jez:badger@10.18.8.30:8153/cruise/cctray.xml&contentType=xml';
+	feedUrl = 'http://localhost:7777/?url=http://10.18.8.52:8153/cruise/cctray.xml&contentType=xml';
+		newDeamon()
+		.pipeline(['Jan-Release'])
+		.feedProvider(cruiseFeedProvider({url:feedUrl}))
+		.addHandler(simpleView)
+		.start(30 * 1000);
+	</script>
+</body>
+</html>
