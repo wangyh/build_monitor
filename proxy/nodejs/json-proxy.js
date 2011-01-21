@@ -5,7 +5,7 @@ http.createServer(function (request, response){
 	var queryString = require('url').parse(request.url, true).query;
 	var callback = queryString.callback;
 	var contentType = queryString.contentType;
-	console.log(str('new requst for {0}, callback: {1}, contentType: {2}', queryString.url, callback, contentType))
+	log(str('new requst for {0}, callback: {1}, contentType: {2}', queryString.url, callback, contentType))
 	getJson(queryString.url, function(statuscode,headers, body){
 		response.writeHead(statuscode, headers);
 		if(contentType === 'xml'){
@@ -17,6 +17,9 @@ http.createServer(function (request, response){
 	});
 }).listen(PORT);
 
+function log(){
+	console.log(str.apply(null, arguments));
+}
 function str(format){
 	var result = format;
 	for(var i=0; i< arguments.length -1 ; i++){
@@ -32,19 +35,19 @@ function getJson(url, callback){
 		path: target.pathname
 	};
 	var client = http.createClient(config.port, config.host);
-	console.log(str('requesting {0}...', url));
-	console.log(str('hostname: {0}, port: {1}' ,config.host, config.port));
+	log(str('requesting {0}...', url));
+	log(str('hostname: {0}, port: {1}' ,config.host, config.port));
 	
 	var request = client.request('GET', config.path, {'host': config.host});
 	request.end();
 	request.on('response', function(response){
-		console.log(str('get response for {0}...', url));
-		console.log(str('status: {0}', response.statusCode));
-		console.log(str('headers: {0}', JSON.stringify(response.headers)));
+		log(str('get response for {0}...', url));
+		log(str('status: {0}', response.statusCode));
+		log(str('headers: {0}', JSON.stringify(response.headers)));
 		
 		response.on('data', function(chunk){
 			callback(response.statusCode, response.headers, chunk);
 		})	
 	})
 }
-console.log(str('Server running on port {0}......' ,PORT));
+log(str('Server running on port {0}......' ,PORT));
