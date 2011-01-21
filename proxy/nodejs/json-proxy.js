@@ -39,6 +39,9 @@ function getJson(url, callback){
 	
 	var request = client.request('GET', config.path, {'host': config.host});
 	request.end();
+	request.on('error', function(){
+		console.log('error')
+	})
 	request.on('response', function(response){
 		log(str('get response for {0}...', url));
 		log(str('status: {0}', response.statusCode));
