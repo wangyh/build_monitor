@@ -1,6 +1,6 @@
 function newDeamon(){
 	var pullInterval = 5 * 1000;
-	var getFeed;
+	var feedProvider;
 	var handlers = [];
 	var intervalId;
 	
@@ -9,8 +9,7 @@ function newDeamon(){
 	}
 	
 	function run(){
-		console.log('run')
-		var feed = getFeed();
+		var feed = feedProvider();
 		for(var i=0; i<handlers.length; i++){
 			handlers[i](feed)
 		}
@@ -21,8 +20,8 @@ function newDeamon(){
 			return this;
 		},
 		
-		feedProvider: function(feedProvider){
-			getFeed = feedProvider;
+		feedProvider: function(theFeedProvider){
+			feedProvider = theFeedProvider;
 			return this;
 		},
 		
