@@ -2,8 +2,9 @@
 <html>
 <head>
 	<script src="http://code.jquery.com/jquery-1.4.4.min.js" type="text/javascript" charset="utf-8"></script>
-	<script src="src/providers/cruiseFeedProvider.js" type="text/javascript" charset="utf-8"></script>
+	<script src="src/lib/array.js" type="text/javascript" charset="utf-8"></script>
 	<script src="src/deamon.js" type="text/javascript" charset="utf-8"></script>
+	<script src="src/providers/cruiseFeedProvider.js" type="text/javascript" charset="utf-8"></script>
 	<script src="src/handlers/statusView.js" type="text/javascript" charset="utf-8"></script>
 	<script src="src/handlers/simpleView.js" type="text/javascript" charset="utf-8"></script>
 	<script src="src/handlers/playMusic.js" type="text/javascript" charset="utf-8"></script>
@@ -12,21 +13,22 @@
 	<script type="text/javascript" charset="utf-8">
 	var feedUrl = 'http://localhost:7777/?url=http://jez:badger@10.18.8.30:8153/cruise/cctray.xml&contentType=xml';
 	//feedUrl = 'http://localhost:7777/?url=http://10.18.8.52:8153/cruise/cctray.xml&contentType=xml';
-		newDeamon()
-		.pipeline(['Jan-Release'])
-		.feedProvider(cruiseFeedProvider({url:feedUrl}))
-		.addHandler(simpleView)
-		.addHandler(playMusic({
-			success:{
-					url:'http://www.swcf.cn/images/2007-05/10/18050410170529629574.mp3',
-					start: 120
-					},
-		   failed:{
-					url:'http://www.foreverbo.com/music/laonanhai.mp3',
-					start : 120
-				}
-		 }))
-		.start(60 * 1000);
+		newDeamon({
+			feedProvider: cruiseFeedProvider({url:feedUrl}),
+			handlers: [simpleView, 
+					   playMusic({	
+							success:{
+								url:'http://www.swcf.cn/images/2007-05/10/18050410170529629574.mp3',
+								start: 120
+							},
+			   				failed:{
+								url:'http://www.foreverbo.com/music/laonanhai.mp3',
+								start : 120
+						}})
+					 ],
+			pipelines: ['Jan-Release'],
+			interval: 60
+		}).start();
 	</script>
 </body>
 </html>

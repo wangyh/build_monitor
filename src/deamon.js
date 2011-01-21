@@ -1,87 +1,87 @@
-Array.prototype.each = function(func){
-	for(var i=0; i<this.length; i++){
-		func(this[i]);
-	}
-}
-
-Array.prototype.map = function(func){
-	var result = [];
-	for(var i=0;i<this.length;i++){
-		result.push(func(this[i]));
-	}
-	return result;
-}
-
-Array.prototype.findAll = function(predicate){
-	var result = [];
-	for(var i=0; i<this.length; i++){
-		if(predicate(this[i])){
-			result.push(this[i]);
-		}
-	}
-	return result;
-}
-
-Array.prototype.any = function(predicate){
-	for(var i=0; i<this.length; i++){
-		if(predicate(this[i])){
-			return true;
-		}
-	}
-	return false;
-}
 function newDeamon(){
-	var pullInterval = 5 * 1000;
+	var pullInterval;
 	var feedProvider;
-	var handlers = [];
+	var handlers;
 	var intervalId;
 	var pipelines;
 		
 	function poll(){
+		clearInterval(intervalId);
 		intervalId = setInterval(run, pullInterval);
 		run();
 	}
 	
 	function run(){
-		feedProvider(function(projects){
-			var projectsToHandle = pipelines
-			? projects.findAll(function(project){
-				return pipelines.any(function(pipeline){
-						return project.name.indexOf(pipeline + " ::") === 0;
-					});
-			})
-			: projects;
+		feedProvider(function(projectsJson){
+			var projects = new Projects(projectsJson);
 			handlers.each(function(handler){
-				handler(projectsToHandle);
+				handler(projects);
 			});
 		});
 	}
 	return {
-		addHandler: function(handler){
-			handlers.push(handler);
-			return this;
-		},
-		
-		feedProvider: function(theFeedProvider){
-			feedProvider = theFeedProvider;
-			return this;
-		},
-		
-		pipeline:function(config){
-			pipelines = config;
-			return this;
-		},
-		start :function(interval){
-			if(interval){
-				pullInterval = interval;
-			}
+		start: function(config){
+			pullInterval = config.interval || 60;
+			feedProvider = config.feedProvider;
+			handlers = config.handlers || [];
+			pipelines = config.pipelines;
 			poll();
-			return this;
-		}, 
-		
-		stop: function(){
-			clearInterval(intervalId);
-			return this;
 		}
 	};
+}
+
+function Projects(projectsJson){
+	this.projects = projectsJson.map(function(project){return new Project(project)});
+}
+
+Projects.prototype = {
+	filterByPipelines: function(pipelines){
+		return new Projects(this.projects
+			.findAll(function(prj){return prj.belongsTo(pipelines)})
+			.map(function(prj){return prj.json})
+		);
+	},
+	isFailed: function(){
+		return this.projects.any(function(prj){return prj.isFailed()});
+	},
+	
+	isSuccessful: function(){
+		return !this.isFailed();
+	},
+	
+	failedProjects: function(){
+		return this.projects.findAll(function(prj){return prj.isFailed()});
+	},
+	
+	successfulProjects: function(){
+		return this.projects.findAll(function(prj){return prj.isSuccessful()});
+	}
+};
+
+function Project(projectJson){
+	this.json = projectJson;
+	this.name = projectJson.name;
+	this.activity = projectJson.activity;
+	this.url = projectJson.weburl;
+	this.status = projectJson.lastbuildstatus;
+	this.buildtime = projectJson.lastbuildtime;
+	this.label = projectJson.lastbuildlabel;
+	
+	this.pipeline = projectJson.name.replace(/^(\w+) ::.*/, "$1");
+	this.stage = projectJson.name.replace(/^(\w+) :: ([^:\W]+)( :: (\w+))?$/, "$2");
+	this.job = projectJson.name.replace(/^(\w+) :: ([^:\W]+)( :: (\w+))?$/, "$4");
+}
+
+Project.prototype = {
+	isFailed: function(){
+		return this.status === "Failure";
+	},
+	
+	isSuccessful: function(){
+		return this.status === "Success";
+	},
+	
+	belongsTo: function(pipelines){
+		return pipelines.contains(this.pipeline);
+	}
 }
