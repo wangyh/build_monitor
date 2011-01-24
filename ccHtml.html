@@ -15,7 +15,7 @@
 	feedUrl = 'http://localhost:7777/?url=http://10.18.8.52:8153/cruise/cctray.xml&contentType=xml';
 		newDeamon()
 		.start({
-			name : 'PwC',
+			name : 'WGSN',
 			feedProvider: cruiseJsonpFeedProvider({url:feedUrl}),
 			handlers: [tableView, 
 					   playMusic({	
@@ -28,7 +28,7 @@
 								start : 120
 						}})
 					 ],
-			//pipelines: ['Jan-Release'],
+			//pipelines: ['WGSN-bundles-active'],
 			interval: 30
 		});
 	</script>
