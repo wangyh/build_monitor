@@ -2,7 +2,7 @@ var playMusic = function($){
 	function play(config){
 		$('audio').remove();
 		var audio = document.createElement('audio');
-		$(audio).attr('controls', 'controls');
+	//	$(audio).attr('controls', 'controls');
 		$(audio).appendTo($('body'));
 		audio.src = config.url;
 		waitForLoad(audio, function(){

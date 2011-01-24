@@ -1,5 +1,8 @@
 var simpleView = function($){
 	return function(projects){
-		$('body').css('background-color', projects.isSuccessful()? 'green': 'red');
+		var color = projects.isBuilding() ? 'yellow' :
+					projects.isSuccessful() ? 'green' :
+					'red';
+		$('body').css('background-color', color);
 	}
 }(jQuery)

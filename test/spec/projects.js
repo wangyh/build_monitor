@@ -3,14 +3,14 @@ describe("Projects", function(){
 	beforeEach(function(){
 		projects_1 = new Projects(
 			[
-				{lastbuildstatus: "Success", name:"Pipeline1 :: Stage1"},
-				{lastbuildstatus: "Failure", name:"Pipeline1 :: Stage2"}
+				{lastbuildstatus: "Success", name:"Pipeline1 :: Stage1", activity: "Sleeping"},
+				{lastbuildstatus: "Failure", name:"Pipeline1 :: Stage2", activity: "Sleeping"}
 			]);
 
 		projects_2 = new Projects(
 			[
-				{lastbuildstatus: "Success", name:"Pipeline2 :: Stage1"},
-				{lastbuildstatus: "Success", name:"Pipeline2 :: Stage2"}
+				{lastbuildstatus: "Success", name:"Pipeline2 :: Stage1", activity: "Sleeping"},
+				{lastbuildstatus: "Success", name:"Pipeline2 :: Stage2", activity: "Building"}
 			]);
 	});
 	
@@ -46,5 +46,10 @@ describe("Projects", function(){
 		expect(projects_3.filterByPipelines(["Pipeline1", "Pipeline2"]).projects.length).toEqual(2);
 		expect(projects_3.filterByPipelines(["Pipeline1", "Pipeline2"]).projects[0].name).toEqual("Pipeline1 :: Stage1");
 		expect(projects_3.filterByPipelines(["Pipeline1", "Pipeline2"]).projects[1].name).toEqual("Pipeline2 :: Stage2");
+	});
+	
+	it("should be able to know is there is project building", function(){
+		expect(projects_1.isBuilding()).toBeFalsy();
+		expect(projects_2.isBuilding()).toBeTruthy();
 	});
 });

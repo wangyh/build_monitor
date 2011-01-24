@@ -35,4 +35,13 @@ describe("Project", function(){
 		expect(job.stage).toEqual("Stage");
 		expect(job.job).toEqual("Job");
 	});
+	
+	it("should be able to get current activity", function(){
+		var project_1 = createProject({name: "Pipeline :: Stage", activity: "Building"});
+		expect(project_1.isBuilding()).toBeTruthy();
+	
+		var project_2 = createProject({name: "Pipeline :: Stage", activity: "Sleeping"});
+		expect(project_2.isBuilding()).toBeFalsy();
+	
+	});
 })
