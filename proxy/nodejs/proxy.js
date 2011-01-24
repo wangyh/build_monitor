@@ -6,7 +6,7 @@ http.createServer(function (request, response){
 	log.info('----------------------------------------------');
 	log.info('new requst for {0}, callback: {1}, contentType: {2}', params.url, params.callback, params.contentType);
 	getJson(params.url, function(statuscode,headers, body){
-		var responseBody = str("{0}({1})", params.callback, params.contentType === 'xml' ? JSON.stringify(require('./lib/xml2json').xml2json.parser(body)) : body);
+		var responseBody = str("{0}({1})", params.callback, JSON.stringify(require('./lib/xml2json').xml2json.parser(body)));
 		headers["Content-Length"] = responseBody.length;
 		log.info('send back: {0} \n{1}', JSON.stringify(headers), responseBody);
 		
@@ -19,7 +19,6 @@ function getParameters(request){
 	return {
 		url: queryString.url,
 		callback : queryString.callback || "foo",
-		contentType: queryString.contentType || "json",
 		username: queryString.username,
 		password: queryString.password
 	}

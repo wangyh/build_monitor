@@ -1,4 +1,4 @@
-var cruiseJsonpFeedProvider = function($){
+var createCruiseJsonpFeedProvider = function($){
 	function getFeed(url, callback){
 		$.ajax({
 			url: url,
@@ -10,7 +10,9 @@ var cruiseJsonpFeedProvider = function($){
 	}
 	return function(config){
 		return function(callback){
-			getFeed(config.url, callback);
+			getFeed(config.proxy + '?url=' + config.url, callback);
 		}
 	}
-}(jQuery);
+}
+
+var cruiseJsonpFeedProvider = createCruiseJsonpFeedProvider(jQuery);

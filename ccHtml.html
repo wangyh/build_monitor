@@ -11,12 +11,15 @@
 </head>
 <body>
 	<script type="text/javascript" charset="utf-8">
-	var feedUrl = 'http://localhost:7777/?url=http://jez:badger@10.18.8.30:8153/cruise/cctray.xml&contentType=xml';
-	//feedUrl = 'http://localhost:7777/?url=http://10.18.8.52:8153/cruise/cctray.xml&contentType=xml';
+	var feedUrl = 'http://jez:badger@10.18.8.30:8153/cruise/cctray.xml';
+	//feedUrl = 'http://10.18.8.52:8153/cruise/cctray.xml';
 		newDaemon()
 		.start({
 			name : 'WGSN',
-			feedProvider: cruiseJsonpFeedProvider({url:feedUrl}),
+			feedProvider: cruiseJsonpFeedProvider({
+								url:feedUrl, 
+								proxy:'http://localhost:7777'
+								}),
 			handlers: [tableView, 
 					   playMusic({	
 							success:{
