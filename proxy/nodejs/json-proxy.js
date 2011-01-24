@@ -1,5 +1,5 @@
 var PORT = 7777;
-var LOG_LEVEL = 'ERROR';
+var LOG_LEVEL = 'INFO';
 var http = require('http');
 http.createServer(function (request, response){
 	var params = getParameters(request);

@@ -11,10 +11,7 @@ var tableView = function($){
 		});
 		stages.each(function(stage){
 			var row = $('<tr/>');
-			$('<td>').append($('<a style="color:white">').attr('href', stage.url).html(stage.name)).appendTo(row);
-			//$('<td>').html(stage.activity).appendTo(row);
-			//$('<td>').html(stage.label).appendTo(row);
-			//$('<td>').html(stage.buildtime).appendTo(row);
+			$('<td>').html(stage.name).appendTo(row);
 			var color = stage.isBuilding() ? 'yellow' : 
 						stage.isSuccessful() ? 'green' : 
 						'red';
@@ -25,6 +22,7 @@ var tableView = function($){
 	}
 	
 	return function(data){
+		console.log(data)
 		$('body').css('background-color', 'gray');
 		removeDom();
 		createDom(data);

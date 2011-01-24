@@ -24,7 +24,7 @@ var playMusic = function($){
 	
 	return function(config){
 		return function(data){
-			if(data.projects.isFailed()){
+			if(data.changedProjects.failed.length + data.changedProjects.failedAgain.length > 0){
 				play(config.failed);
 			}
 			else{

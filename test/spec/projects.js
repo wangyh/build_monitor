@@ -52,4 +52,75 @@ describe("Projects", function(){
 		expect(projects_1.isBuilding()).toBeFalsy();
 		expect(projects_2.isBuilding()).toBeTruthy();
 	});
+	
+	describe("changedProjects", function(){
+		var lastStatus = new Projects(
+			[
+				{lastbuildstatus: "Success", name:"Pipeline1 :: Stage1", activity: "Sleeping", lastbuildtime: '2011-01-24T17:00:19'},
+				{lastbuildstatus: "Failure", name:"Pipeline1 :: Stage2", activity: "Sleeping", lastbuildtime: '2011-01-24T17:00:19'}
+			]);
+		it('should not list projects without change', function(){
+			var changedProjects = new Projects(
+				[
+					{lastbuildstatus: "Success", name:"Pipeline1 :: Stage1", activity: "Sleeping", lastbuildtime: '2011-01-24T17:00:19'},
+					{lastbuildstatus: "Failure", name:"Pipeline1 :: Stage2", activity: "Sleeping", lastbuildtime: '2011-01-24T17:00:19'}
+				]).getChangedProjects(lastStatus);
+			expect(changedProjects.failed.length).toEqual(0);
+			expect(changedProjects.successful.length).toEqual(0);
+			expect(changedProjects.fixed.length).toEqual(0);
+			expect(changedProjects.failedAgain.length).toEqual(0);
+		});
+		
+		it('should list failed projects', function(){
+			var changedProjects = new Projects(
+				[
+					{lastbuildstatus: "Failure", name:"Pipeline1 :: Stage1", activity: "Sleeping", lastbuildtime: '2011-01-24T22:00:19'},
+					{lastbuildstatus: "Failure", name:"Pipeline1 :: Stage2", activity: "Sleeping", lastbuildtime: '2011-01-24T17:00:19'}
+				]).getChangedProjects(lastStatus);
+			expect(changedProjects.failed.length).toEqual(1);
+			expect(changedProjects.failed[0].name).toEqual("Pipeline1 :: Stage1");
+			expect(changedProjects.successful.length).toEqual(0);
+			expect(changedProjects.fixed.length).toEqual(0);
+			expect(changedProjects.failedAgain.length).toEqual(0);
+		});
+		
+		it('should list successful projects', function(){
+			var changedProjects = new Projects(
+				[
+					{lastbuildstatus: "Success", name:"Pipeline1 :: Stage1", activity: "Sleeping", lastbuildtime: '2011-01-24T22:00:19'},
+					{lastbuildstatus: "Failure", name:"Pipeline1 :: Stage2", activity: "Sleeping", lastbuildtime: '2011-01-24T17:00:19'}
+				]).getChangedProjects(lastStatus);
+			expect(changedProjects.failed.length).toEqual(0);
+			expect(changedProjects.successful.length).toEqual(1);
+			expect(changedProjects.successful[0].name).toEqual("Pipeline1 :: Stage1");
+			expect(changedProjects.fixed.length).toEqual(0);
+			expect(changedProjects.failedAgain.length).toEqual(0);
+		});
+		
+		it('should list projects failed again', function(){
+			var changedProjects = new Projects(
+				[
+					{lastbuildstatus: "Success", name:"Pipeline1 :: Stage1", activity: "Sleeping", lastbuildtime: '2011-01-24T17:00:19'},
+					{lastbuildstatus: "Failure", name:"Pipeline1 :: Stage2", activity: "Sleeping", lastbuildtime: '2011-01-24T22:00:19'}
+				]).getChangedProjects(lastStatus);
+			expect(changedProjects.failed.length).toEqual(0);
+			expect(changedProjects.successful.length).toEqual(0);
+			expect(changedProjects.fixed.length).toEqual(0);
+			expect(changedProjects.failedAgain.length).toEqual(1);
+			expect(changedProjects.failedAgain[0].name).toEqual("Pipeline1 :: Stage2");			
+		});
+		
+		it('should list projects fixed', function(){
+			var changedProjects = new Projects(
+				[
+					{lastbuildstatus: "Success", name:"Pipeline1 :: Stage1", activity: "Sleeping", lastbuildtime: '2011-01-24T17:00:19'},
+					{lastbuildstatus: "Success", name:"Pipeline1 :: Stage2", activity: "Sleeping", lastbuildtime: '2011-01-24T22:00:19'}
+				]).getChangedProjects(lastStatus);
+			expect(changedProjects.failed.length).toEqual(0);
+			expect(changedProjects.successful.length).toEqual(0);
+			expect(changedProjects.fixed.length).toEqual(1);
+			expect(changedProjects.fixed[0].name).toEqual("Pipeline1 :: Stage2");			
+			expect(changedProjects.failedAgain.length).toEqual(0);
+		})
+	});
 });

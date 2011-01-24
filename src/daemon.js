@@ -5,6 +5,7 @@ function newDeamon(){
 	var intervalId;
 	var pipelines;
 	var name;
+	var lastProjectStatus;
 		
 	function poll(){
 		clearInterval(intervalId);
@@ -16,8 +17,13 @@ function newDeamon(){
 		feedProvider(function(projectsJson){
 			var projects = pipelines ? new Projects(projectsJson).filterByPipelines(pipelines)
 									 : new Projects(projectsJson);
+									
+			var changedProjects= lastProjectStatus? projects.getChangedProjects(lastProjectStatus) 
+												  :{failed:[], fixed:[], successful:[], failedAgain:[]};
+			lastProjectStatus = projects;
+
 			handlers.each(function(handler){
-				handler({name: name, projects: projects});
+				handler({name: name, projects: projects, changedProjects: changedProjects});
 			});
 		});
 	}
@@ -35,6 +41,11 @@ function newDeamon(){
 
 function Projects(projectsJson){
 	this.projects = projectsJson.map(function(project){return new Project(project)});
+	this.projectMap = {};
+	var self = this;
+	this.projects.each(function(prj){
+		self.projectMap[prj.name] = prj;
+	});
 }
 
 Projects.prototype = {
@@ -44,6 +55,24 @@ Projects.prototype = {
 			.map(function(prj){return prj.json})
 		);
 	},
+	getChangedProjects: function(lastStatus){
+		function getAllChangedProjects(currentStatus, lastStatus){
+			return currentStatus.projects.findAll(function(prj){
+				return lastProjectStatus(prj) && lastProjectStatus(prj).buildtime !== prj.buildtime;
+			});
+		}
+		function lastProjectStatus(prj){
+			return lastStatus.projectMap[prj.name];
+		}
+		var changed = getAllChangedProjects(this, lastStatus);
+		return {
+			failed: changed.findAll(function(prj){return lastProjectStatus(prj).isSuccessful() && prj.isFailed()}),
+			successful: changed.findAll(function(prj){return lastProjectStatus(prj).isSuccessful() && prj.isSuccessful()}),
+			fixed: changed.findAll(function(prj){return lastProjectStatus(prj).isFailed() && prj.isSuccessful()}),
+			failedAgain: changed.findAll(function(prj){return lastProjectStatus(prj).isFailed() && prj.isFailed()})
+		};
+	},
+	
 	isFailed: function(){
 		return this.projects.any(function(prj){return prj.isFailed()});
 	},

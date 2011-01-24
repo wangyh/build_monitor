@@ -12,12 +12,12 @@
 <body>
 	<script type="text/javascript" charset="utf-8">
 	var feedUrl = 'http://localhost:7777/?url=http://jez:badger@10.18.8.30:8153/cruise/cctray.xml&contentType=xml';
-	feedUrl = 'http://localhost:7777/?url=http://10.18.8.52:8153/cruise/cctray.xml&contentType=xml';
+	//feedUrl = 'http://localhost:7777/?url=http://10.18.8.52:8153/cruise/cctray.xml&contentType=xml';
 		newDeamon()
 		.start({
 			name : 'WGSN',
 			feedProvider: cruiseJsonpFeedProvider({url:feedUrl}),
-			handlers: [tableView, 
+			handlers: [simpleView, 
 					   playMusic({	
 							success:{
 								url:'http://www.swcf.cn/images/2007-05/10/18050410170529629574.mp3',
@@ -28,7 +28,7 @@
 								start : 120
 						}})
 					 ],
-			//pipelines: ['WGSN-bundles-active'],
+			pipelines: ['WGSN-bundles-active'],
 			interval: 30
 		});
 	</script>
