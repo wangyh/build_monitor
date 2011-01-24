@@ -5,7 +5,7 @@
 	<script src="src/lib/array.js" type="text/javascript" charset="utf-8"></script>
 	<script src="src/daemon.js" type="text/javascript" charset="utf-8"></script>
 	<script src="src/providers/cruiseJsonpFeedProvider.js" type="text/javascript" charset="utf-8"></script>
-	<script src="src/handlers/statusView.js" type="text/javascript" charset="utf-8"></script>
+	<script src="src/handlers/tableView.js" type="text/javascript" charset="utf-8"></script>
 	<script src="src/handlers/simpleView.js" type="text/javascript" charset="utf-8"></script>
 	<script src="src/handlers/playMusic.js" type="text/javascript" charset="utf-8"></script>
 </head>
@@ -15,8 +15,9 @@
 	feedUrl = 'http://localhost:7777/?url=http://10.18.8.52:8153/cruise/cctray.xml&contentType=xml';
 		newDeamon()
 		.start({
+			name : 'PwC',
 			feedProvider: cruiseJsonpFeedProvider({url:feedUrl}),
-			handlers: [simpleView, 
+			handlers: [tableView, 
 					   playMusic({	
 							success:{
 								url:'http://www.swcf.cn/images/2007-05/10/18050410170529629574.mp3',
@@ -27,7 +28,7 @@
 								start : 120
 						}})
 					 ],
-			pipelines: ['Jan-Release'],
+			//pipelines: ['Jan-Release'],
 			interval: 30
 		});
 	</script>

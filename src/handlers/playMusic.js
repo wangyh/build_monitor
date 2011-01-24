@@ -23,8 +23,8 @@ var playMusic = function($){
 	}
 	
 	return function(config){
-		return function(projects){
-			if(projects.isFailed()){
+		return function(data){
+			if(data.projects.isFailed()){
 				play(config.failed);
 			}
 			else{

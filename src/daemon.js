@@ -4,6 +4,7 @@ function newDeamon(){
 	var handlers;
 	var intervalId;
 	var pipelines;
+	var name;
 		
 	function poll(){
 		clearInterval(intervalId);
@@ -15,14 +16,14 @@ function newDeamon(){
 		feedProvider(function(projectsJson){
 			var projects = pipelines ? new Projects(projectsJson).filterByPipelines(pipelines)
 									 : new Projects(projectsJson);
-			
 			handlers.each(function(handler){
-				handler(projects);
+				handler({name: name, projects: projects});
 			});
 		});
 	}
 	return {
 		start: function(config){
+			name = config.name || "Unknown Project";
 			pullInterval = config.interval || 60;
 			feedProvider = config.feedProvider;
 			handlers = config.handlers || [];
@@ -73,9 +74,9 @@ function Project(projectJson){
 	this.buildtime = projectJson.lastbuildtime;
 	this.label = projectJson.lastbuildlabel;
 	
-	this.pipeline = projectJson.name.replace(/^(\w+) ::.*/, "$1");
-	this.stage = projectJson.name.replace(/^(\w+) :: ([^:\W]+)( :: (\w+))?$/, "$2");
-	this.job = projectJson.name.replace(/^(\w+) :: ([^:\W]+)( :: (\w+))?$/, "$4");
+	this.pipeline = projectJson.name.replace(/^(\S+)\s*::.*/, "$1");
+	this.stage = projectJson.name.replace(/^(\S+)\s*::\s*(\S+)( :: (\S+))?$/, "$2");
+	this.job = projectJson.name.replace(/^(\S+)\s*::\s*(\S+)( :: (\S+))?$/, "$4");
 }
 
 Project.prototype = {

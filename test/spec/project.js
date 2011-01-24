@@ -30,10 +30,15 @@ describe("Project", function(){
 		expect(stage.stage).toEqual("Stage");
 		expect(stage.job).toEqual("");
 		
-		var job = createProject({name: "Pipeline :: Stage :: Job"});
-		expect(job.pipeline).toEqual("Pipeline");
-		expect(job.stage).toEqual("Stage");
-		expect(job.job).toEqual("Job");
+		var job = createProject({name: "Jan-Release-Smoke :: Prebuild-Packages-For-Following-Stages"});
+		expect(job.pipeline).toEqual("Jan-Release-Smoke");
+		expect(job.stage).toEqual("Prebuild-Packages-For-Following-Stages");
+		expect(job.job).toEqual("");
+		
+		var job = createProject({name: "Jan-Release-Smoke :: Prebuild-Packages-For-Following-Stages :: prebuild-packages"});
+		expect(job.pipeline).toEqual("Jan-Release-Smoke");
+		expect(job.stage).toEqual("Prebuild-Packages-For-Following-Stages");
+		expect(job.job).toEqual("prebuild-packages");
 	});
 	
 	it("should be able to get current activity", function(){
