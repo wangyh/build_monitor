@@ -16,7 +16,7 @@
 		newDeamon()
 		.start({
 			feedProvider: cruiseJsonpFeedProvider({url:feedUrl}),
-			handlers: [simpleView, 
+			handlers: [statusView, 
 					   playMusic({	
 							success:{
 								url:'http://www.swcf.cn/images/2007-05/10/18050410170529629574.mp3',
