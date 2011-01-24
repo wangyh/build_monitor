@@ -121,6 +121,6 @@ describe("Projects", function(){
 			expect(changedProjects.fixed.length).toEqual(1);
 			expect(changedProjects.fixed[0].name).toEqual("Pipeline1 :: Stage2");			
 			expect(changedProjects.failedAgain.length).toEqual(0);
-		})
+		});
 	});
 });

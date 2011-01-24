@@ -1,4 +1,4 @@
-function newDeamon(){
+function newDaemon(){
 	var pullInterval;
 	var feedProvider;
 	var handlers;
