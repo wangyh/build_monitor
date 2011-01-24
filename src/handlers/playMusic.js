@@ -5,19 +5,28 @@ var playMusic = function($){
 	//	$(audio).attr('controls', 'controls');
 		$(audio).appendTo($('body'));
 		audio.src = config.url;
-		waitForLoad(audio, function(){
-			audio.currentTime = config.start;
-			audio.play();
+		waitForCondition(function(){
+				return audio.duration
+			}, 
+			function(){
+				audio.currentTime = config.start;
+				audio.play();
+				waitForCondition(function(){
+					return audio.currentTime >= config.stop
+				},
+				function(){
+					audio.pause();
+				});
 		});
 	}
 	
-	function waitForLoad(audio, callback){
+	function waitForCondition(condition, callback){
 		setTimeout(function(){
-				if(audio.duration){
+				if(condition()){
 					callback();
 				}
 				else{
-					waitForLoad(audio, callback);
+					waitForCondition.apply(this, Array.prototype.slice(arguments));
 				}
 		}, 1000);
 	}
