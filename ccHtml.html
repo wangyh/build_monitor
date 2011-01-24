@@ -3,8 +3,8 @@
 <head>
 	<script src="http://code.jquery.com/jquery-1.4.4.min.js" type="text/javascript" charset="utf-8"></script>
 	<script src="src/lib/array.js" type="text/javascript" charset="utf-8"></script>
-	<script src="src/deamon.js" type="text/javascript" charset="utf-8"></script>
-	<script src="src/providers/cruiseFeedProvider.js" type="text/javascript" charset="utf-8"></script>
+	<script src="src/daemon.js" type="text/javascript" charset="utf-8"></script>
+	<script src="src/providers/cruiseJsonpFeedProvider.js" type="text/javascript" charset="utf-8"></script>
 	<script src="src/handlers/statusView.js" type="text/javascript" charset="utf-8"></script>
 	<script src="src/handlers/simpleView.js" type="text/javascript" charset="utf-8"></script>
 	<script src="src/handlers/playMusic.js" type="text/javascript" charset="utf-8"></script>
@@ -12,9 +12,10 @@
 <body>
 	<script type="text/javascript" charset="utf-8">
 	var feedUrl = 'http://localhost:7777/?url=http://jez:badger@10.18.8.30:8153/cruise/cctray.xml&contentType=xml';
-	//feedUrl = 'http://localhost:7777/?url=http://10.18.8.52:8153/cruise/cctray.xml&contentType=xml';
-		newDeamon({
-			feedProvider: cruiseFeedProvider({url:feedUrl}),
+	feedUrl = 'http://localhost:7777/?url=http://10.18.8.52:8153/cruise/cctray.xml&contentType=xml';
+		newDeamon()
+		.start({
+			feedProvider: cruiseJsonpFeedProvider({url:feedUrl}),
 			handlers: [simpleView, 
 					   playMusic({	
 							success:{
@@ -27,8 +28,8 @@
 						}})
 					 ],
 			pipelines: ['Jan-Release'],
-			interval: 60
-		}).start();
+			interval: 30
+		});
 	</script>
 </body>
 </html>

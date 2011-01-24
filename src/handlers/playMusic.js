@@ -5,13 +5,26 @@ var playMusic = function($){
 		$(audio).attr('controls', 'controls');
 		$(audio).appendTo($('body'));
 		audio.src = config.url;
-		audio.play();
-		audio.currentTime = config.start;
+		waitForLoad(audio, function(){
+			audio.currentTime = config.start;
+			audio.play();
+		});
+	}
+	
+	function waitForLoad(audio, callback){
+		setTimeout(function(){
+				if(audio.duration){
+					callback();
+				}
+				else{
+					waitForLoad(audio, callback);
+				}
+		}, 1000);
 	}
 	
 	return function(config){
 		return function(projects){
-			if(projects.any(function(project){ return project.lastbuildstatus === "Failure"})){
+			if(projects.isFailed()){
 				play(config.failed);
 			}
 			else{

@@ -1,4 +1,4 @@
-var cruiseFeedProvider = function($){
+var cruiseJsonpFeedProvider = function($){
 	function getFeed(url, callback){
 		$.ajax({
 			url: url,
