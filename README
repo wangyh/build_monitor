@@ -1,5 +1,1 @@
-ccHtml is a replacement for ccTray. 
-
-ccTray is an amazing tools for CI. But it has to been run on Windows and can only play wav. 
-
-By leveraging HTML5 features, ccHtml can play music with any format the browser support, and can be used in any modern browser support HTML5.
+BuildMonitor is ccTray running in browser.
