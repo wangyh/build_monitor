@@ -38,10 +38,14 @@ var playMusic = function($){
 	
 	return function(config){
 		return function(data){
-			if(data.changedProjects.failed.length + data.changedProjects.failedAgain.length > 0){
+			if(data.changedProjects.failed.length && config.failed){
 				play(config.failed);
-			} else if(data.changedProjects.successful.length + data.changedProjects.fixed.length > 0){
-				play(config.success);
+			} else if(data.changedProjects.failedAgain.length && config.failedAgain){
+				play(config.failedAgain);
+			} else if(data.changedProjects.successful.length && config.successful){
+				play(config.successful);
+			} else if(data.changedProjects.fixed.length && config.fixed){
+				play(config.fixed);
 			}
 		}
 	}

@@ -1,18 +1,12 @@
 function newDaemon(){
-	var pullInterval;
+	var pollInterval;
 	var feedProvider;
 	var handlers;
-	var intervalId;
+	var timeoutId;
 	var filter;
 	var name;
 	var lastProjectStatus;
 		
-	function poll(){
-		clearInterval(intervalId);
-		intervalId = setInterval(run, pullInterval * 1000);
-		run();
-	}
-	
 	function getInterestedProjects(projectsJson){
 		var projects = filter ? new Projects(projectsJson).grepByFilter(filter)
 								 : new Projects(projectsJson);
@@ -33,16 +27,22 @@ function newDaemon(){
 					changedProjects: changedProjects
 				});
 			});
+			
+			timeoutId = setTimeout(function(){
+				run();
+			}, pollInterval * 1000);
 		});
+		
 	}
 	return {
 		start: function(config){
 			name = config.name || "Unknown Project";
-			pullInterval = config.interval || 60;
+			pollInterval = config.interval || 60;
 			feedProvider = config.feedProvider;
 			handlers = config.handlers || [];
 			filter = config.filter || {};
-			poll();
+			clearTimeout(timeoutId);
+			run();
 		}
 	};
 }

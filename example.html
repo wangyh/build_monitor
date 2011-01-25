@@ -18,10 +18,20 @@
 								url: 'http://www.foo.com/cruise/cctray.xml', 
 								proxy:'http://localhost:7777'
 								}),
-			handlers: [tableView, 
+			handlers: [tableView,
 					   playMusic({	
-							success:{
+							successful:{
 								url:'http://success.mp3',
+								start: 120,
+								stop: 130
+							},
+			   				fixed:{
+								url:'http://fixed.mp3',
+								start : 120,
+								stop: 130
+							},
+							failedAgain:{
+								url:'http://failedAgain.mp3',
 								start: 120,
 								stop: 130
 							},
@@ -29,7 +39,8 @@
 								url:'http://failure.mp3',
 								start : 120,
 								stop: 130
-						}})
+							}
+					})
 					 ],
 			filter: {include: [/job1/], exclude: [/pipeline2/]},
 			interval: 60
