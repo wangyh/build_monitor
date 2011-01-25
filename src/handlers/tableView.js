@@ -22,7 +22,6 @@ var tableView = function($){
 	}
 	
 	return function(data){
-		console.log(data)
 		$('body').css('background-color', 'gray');
 		removeDom();
 		createDom(data);

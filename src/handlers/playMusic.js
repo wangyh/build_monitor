@@ -2,7 +2,7 @@ var playMusic = function($){
 	function play(config){
 		$('audio').remove();
 		var audio = document.createElement('audio');
-	//	$(audio).attr('controls', 'controls');
+		$(audio).attr('controls', 'controls');
 		$(audio).appendTo($('body'));
 		audio.src = config.url;
 		waitForCondition(function(){
@@ -12,11 +12,11 @@ var playMusic = function($){
 				audio.currentTime = config.start;
 				audio.play();
 				waitForCondition(function(){
-					return audio.currentTime >= config.stop
-				},
-				function(){
-					audio.pause();
-				});
+									return audio.currentTime >= config.stop;
+								},
+								function(){
+									audio.pause();
+								});
 		});
 	}
 	
@@ -26,7 +26,7 @@ var playMusic = function($){
 					callback();
 				}
 				else{
-					waitForCondition.apply(this, Array.prototype.slice(arguments));
+					waitForCondition(condition, callback);
 				}
 		}, 1000);
 	}

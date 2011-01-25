@@ -17,7 +17,7 @@
 		.start({
 			name : 'WGSN',
 			feedProvider: cruiseJsonpFeedProvider({
-								url:feedUrl, 
+								url: 'http://jez:badger@10.18.8.30:8153/cruise/cctray.xml', 
 								proxy:'http://localhost:7777'
 								}),
 			handlers: [tableView, 
@@ -25,16 +25,16 @@
 							success:{
 								url:'http://www.swcf.cn/images/2007-05/10/18050410170529629574.mp3',
 								start: 120,
-								stop: 135
+								stop: 125
 							},
 			   				failed:{
 								url:'http://www.foreverbo.com/music/laonanhai.mp3',
 								start : 120,
-								stop: 135
+								stop: 125
 						}})
 					 ],
 			pipelines: ['WGSN-bundles-active'],
-			interval: 30
+			interval: 60
 		});
 	</script>
 </body>
