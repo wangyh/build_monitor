@@ -9,9 +9,11 @@ describe("Project", function(){
 		expect(project.url).toEqual("http://www.foo.com");
 	});
 	
-	it("should be able to know if project belongs to specific pipeline", function(){
-		expect(createProject({name:"Pipeline :: Stage"}).belongsTo(["Pipeline", "anotherPipeline"])).toBeTruthy();
-		expect(createProject({name:"foo :: bar"}).belongsTo(["Pipeline", "anotherPipeline"])).toBeFalsy();
+	it("should be able to know if project name match patterns", function(){
+		expect(createProject({name:"Pipeline :: Stage"}).match([])).toBeTruthy();
+		expect(createProject({name:"Pipeline :: Stage"}).match([/Pip/, /not match/])).toBeTruthy();
+		expect(createProject({name:"Pipeline :: Stage"}).match([/Pipeline :: Stage/])).toBeTruthy();
+		expect(createProject({name:"foo :: bar"}).match([/foo1/])).toBeFalsy();
 	});
 	
 	it("should be able to know if it's success or failed", function(){

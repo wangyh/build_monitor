@@ -3,7 +3,7 @@ function newDaemon(){
 	var feedProvider;
 	var handlers;
 	var intervalId;
-	var pipelines;
+	var filter;
 	var name;
 	var lastProjectStatus;
 		
@@ -13,17 +13,25 @@ function newDaemon(){
 		run();
 	}
 	
+	function getInterestedProjects(projectsJson){
+		var projects = filter ? new Projects(projectsJson).grepByFilter(filter)
+								 : new Projects(projectsJson);
+								
+		return projects;
+	}
 	function run(){
 		feedProvider(function(projectsJson){
-			var projects = pipelines ? new Projects(projectsJson).filterByPipelines(pipelines)
-									 : new Projects(projectsJson);
-									
+			var projects = getInterestedProjects(projectsJson);			
 			var changedProjects= lastProjectStatus? projects.getChangedProjects(lastProjectStatus) 
 												  :{failed:[], fixed:[], successful:[], failedAgain:[]};
 			lastProjectStatus = projects;
 
 			handlers.each(function(handler){
-				handler({name: name, projects: projects, changedProjects: changedProjects});
+				handler({
+					name: name, 
+					projects: projects, 
+					changedProjects: changedProjects
+				});
 			});
 		});
 	}
@@ -33,7 +41,7 @@ function newDaemon(){
 			pullInterval = config.interval || 60;
 			feedProvider = config.feedProvider;
 			handlers = config.handlers || [];
-			pipelines = config.pipelines;
+			filter = config.filter || {};
 			poll();
 		}
 	};
@@ -49,9 +57,11 @@ function Projects(projectsJson){
 }
 
 Projects.prototype = {
-	filterByPipelines: function(pipelines){
-		return new Projects(this.projects
-			.findAll(function(prj){return prj.belongsTo(pipelines)})
+	grepByFilter: function(filter){
+		var includes = filter.include || [];
+		var excludes = filter.exclude || [];
+ 		return new Projects(this.projects
+			.findAll(function(prj){return prj.match(includes) && (excludes.length === 0  || !prj.match(excludes))})
 			.map(function(prj){return prj.json})
 		);
 	},
@@ -117,8 +127,12 @@ Project.prototype = {
 		return this.status === "Success";
 	},
 	
-	belongsTo: function(pipelines){
-		return pipelines.contains(this.pipeline);
+	match: function(regExs){
+		if(regExs.length === 0){
+			return true;
+		}
+		var self = this;
+		return regExs.any(function(regEx){ return regEx.test(self.name);});
 	},
 	
 	isBuilding: function(){
