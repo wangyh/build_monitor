@@ -4,7 +4,7 @@ var http = require('http');
 http.createServer(function (request, response){
 	var params = getParameters(request);
 	log.info('----------------------------------------------');
-	log.info('new requst for {0}, callback: {1}, contentType: {2}', params.url, params.callback, params.contentType);
+	log.info('new requst for {0}, callback: {1}', params.url, params.callback);
 	getJson(params.url, function(statuscode,headers, body){
 		var responseBody = str("{0}({1})", params.callback, JSON.stringify(require('./lib/xml2json').xml2json.parser(body)));
 		headers["Content-Length"] = responseBody.length;

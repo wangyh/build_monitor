@@ -1,22 +1,27 @@
 var playMusic = function($){
 	function play(config){
+		var startTime = config.start || 0;
+		var endTime = config.stop;
+		 
 		$('audio').remove();
 		var audio = document.createElement('audio');
 		//$(audio).attr('controls', 'controls');
 		$(audio).appendTo($('body'));
 		audio.src = config.url;
 		waitForCondition(function(){
-				return audio.duration
+				return audio.duration;
 			}, 
 			function(){
-				audio.currentTime = config.start;
+				audio.currentTime = startTime;
 				audio.play();
-				waitForCondition(function(){
-									return audio.currentTime >= config.stop;
+				if(endTime){
+					waitForCondition(function(){
+									return audio.currentTime >= Math.min(endTime, audio.duration);
 								},
 								function(){
 									audio.pause();
 								});
+				}
 		});
 	}
 	

@@ -6,9 +6,7 @@ var tableView = function($){
 	function createDom(data){
 		var dom = $('<table id="status" style="color:white" width="100%" cellpadding="5"/>');
 		$('<caption>').html(data.name).appendTo(dom);
-		var stages = data.projects.projects.findAll(function(prj){
-			return prj.job === "";
-		});
+		var stages = data.projects.projects;
 		stages.each(function(stage){
 			var row = $('<tr/>');
 			$('<td>').html(stage.name).appendTo(row);
