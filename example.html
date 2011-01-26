@@ -21,22 +21,22 @@
 			handlers: [tableView,
 					   playMusic({	
 							successful:{
-								url:'http://success.mp3',
+								url:['http://site/success.mp3', 'http://site/success.ogg']
 								start: 120,
 								stop: 130
 							},
 			   				fixed:{
-								url:'http://fixed.mp3',
+								url:'http://site/fixed.mp3',
 								start : 120,
 								stop: 130
 							},
 							failedAgain:{
-								url:'http://failedAgain.mp3',
+								url:'http://site/failedAgain.mp3',
 								start: 120,
 								stop: 130
 							},
 			   				failed:{
-								url:'http://failure.mp3',
+								url:'http://site/failure.mp3',
 								start : 120,
 								stop: 130
 							}

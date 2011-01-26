@@ -1,13 +1,10 @@
 var playMusic = function($){
 	function play(config){
+		$('audio').remove();
+		var audio = createAudioElement(config);
 		var startTime = config.start || 0;
 		var endTime = config.stop;
-		 
-		$('audio').remove();
-		var audio = document.createElement('audio');
-		//$(audio).attr('controls', 'controls');
-		$(audio).appendTo($('body'));
-		audio.src = config.url;
+		
 		waitForCondition(function(){
 				return audio.duration;
 			}, 
@@ -23,6 +20,20 @@ var playMusic = function($){
 								});
 				}
 		});
+	}
+	
+	function createAudioElement(config){
+			var audio = document.createElement('audio');
+			$(audio).attr('controls', 'controls');
+			var sources = (config.url instanceof Array ? config.url : [config.url]);
+			sources.each(function(ele){
+				$('<source>')
+				.attr('src', ele)
+				.attr('type', /.mp3$/.test(ele) ? 'audio/mpeg' : /.ogg$/.test(ele) ? 'audio/ogg' : '')
+				.appendTo($(audio));
+			});
+			$(audio).appendTo($('body'));
+		return audio;
 	}
 	
 	function waitForCondition(condition, callback){
