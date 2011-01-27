@@ -6,6 +6,7 @@ function newDaemon(){
 	var filter;
 	var name;
 	var lastProjectStatus;
+	var jobQueue = [];
 		
 	function getInterestedProjects(projectsJson){
 		var projects = filter ? new Projects(projectsJson).grepByFilter(filter)
@@ -16,6 +17,12 @@ function newDaemon(){
 	function run(){
 		feedProvider(function(projectsJson){
 			var projects = getInterestedProjects(projectsJson);			
+			jobQueue.push(projects);
+		});
+		
+		if(jobQueue.length > 0)
+		{
+			var projects = jobQueue.shift();
 			var changedProjects= lastProjectStatus? projects.getChangedProjects(lastProjectStatus) 
 												  :{failed:[], fixed:[], successful:[], failedAgain:[]};
 			lastProjectStatus = projects;
@@ -27,11 +34,11 @@ function newDaemon(){
 					changedProjects: changedProjects
 				});
 			});
-			
-			timeoutId = setTimeout(function(){
-				run();
-			}, pollInterval * 1000);
-		});
+		}	
+		
+		timeoutId = setTimeout(function(){
+			run();
+		}, pollInterval * 1000);
 		
 	}
 	return {
@@ -113,9 +120,11 @@ function Project(projectJson){
 	this.buildtime = projectJson.lastbuildtime;
 	this.label = projectJson.lastbuildlabel;
 	
-	this.pipeline = projectJson.name.replace(/^(\S+)\s*::.*/, "$1");
-	this.stage = projectJson.name.replace(/^(\S+)\s*::\s*(\S+)( :: (\S+))?$/, "$2");
-	this.job = projectJson.name.replace(/^(\S+)\s*::\s*(\S+)( :: (\S+))?$/, "$4");
+	var regexp = /^(\S+)(?:\s*::\s*(\S+))?(?:\s*::\s*(\S+))?$/;
+	var match = projectJson.name.match(regexp);
+	this.pipeline = match[1] || "";
+	this.stage = match[2] || "";
+	this.job = match[3] || "";
 }
 
 Project.prototype = {
