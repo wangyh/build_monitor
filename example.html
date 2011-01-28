@@ -16,7 +16,8 @@
 			name : 'Example Project',
 			feedProvider: cruiseJsonpFeedProvider({
 								url: 'http://www.foo.com/cruise/cctray.xml', 
-								proxy:'http://localhost:7777'
+								proxy:'http://localhost:7777',
+								filter: {include: [/job1/], exclude: [/pipeline2/]}
 								}),
 			handlers: [tableView,
 					   playMusic({	
@@ -42,7 +43,6 @@
 							}
 					})
 					 ],
-			filter: {include: [/job1/], exclude: [/pipeline2/]},
 			interval: 60
 		});
 	</script>
