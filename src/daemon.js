@@ -8,7 +8,7 @@ function newDaemon(){
 		
 	function run(){
 		poll();
-		startJobs();
+		exec();
 	}
 	function poll(){
 		feedProvider(function(job){
@@ -20,7 +20,7 @@ function newDaemon(){
 		}, pollInterval * 1000);		
 	}
 	
-	function startJobs(){
+	function exec(){
 		if(jobQueue.length > 0)
 		{
 			var projects = jobQueue.shift();
@@ -37,7 +37,7 @@ function newDaemon(){
 			});
 		}
 		setTimeout(function(){
-			startJobs();
+			exec();
 		}, 1000);
 	}
 	
