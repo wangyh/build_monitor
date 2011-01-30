@@ -24,7 +24,7 @@ var playMusic = function($){
 	
 	function createAudioElement(config){
 			var audio = document.createElement('audio');
-			$(audio).attr('controls', 'controls');
+			//$(audio).attr('controls', 'controls');
 			var sources = (config.url instanceof Array ? config.url : [config.url]);
 			sources.each(function(ele){
 				$('<source>')

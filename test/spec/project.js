@@ -1,4 +1,14 @@
 describe("Project", function(){
+	function createProject(attrs){
+		var prj = {name: "ccHTML", activity: "Sleeping", lastbuildstatus: "Success", lastbuildtime: "2011-01-02", lastbuildlabel: "10", weburl: "http://www.foo.com"};
+		if(attrs){
+			for(var name in attrs){
+				prj[name] = attrs[name];
+			}
+		}
+		return new Project(prj);
+	}
+
 	it("should be able to get project properties", function(){
 		var project = createProject();
 		expect(project.name).toEqual("ccHTML");
@@ -26,22 +36,6 @@ describe("Project", function(){
 		expect(success_project.isSuccessful()).toBeTruthy();
 	});
 	
-	it("should be able to get pipeline, stage and job name", function(){
-		var stage = createProject({name: "Pipeline :: Stage"});
-		expect(stage.pipeline).toEqual("Pipeline");
-		expect(stage.stage).toEqual("Stage");
-		expect(stage.job).toEqual("");
-		
-		var job = createProject({name: "Jan-Release-Smoke :: Prebuild-Packages-For-Following-Stages"});
-		expect(job.pipeline).toEqual("Jan-Release-Smoke");
-		expect(job.stage).toEqual("Prebuild-Packages-For-Following-Stages");
-		expect(job.job).toEqual("");
-		
-		var job = createProject({name: "Jan-Release-Smoke :: Prebuild-Packages-For-Following-Stages :: prebuild-packages"});
-		expect(job.pipeline).toEqual("Jan-Release-Smoke");
-		expect(job.stage).toEqual("Prebuild-Packages-For-Following-Stages");
-		expect(job.job).toEqual("prebuild-packages");
-	});
 	
 	it("should be able to get current activity", function(){
 		var project_1 = createProject({name: "Pipeline :: Stage", activity: "Building"});
