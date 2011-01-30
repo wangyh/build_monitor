@@ -5,7 +5,7 @@ var tableView = function($){
 	
 	function createDom(data){
 		var dom = $('<table id="status" style="color:white; background-color:gray" width="100%" cellpadding="5" />');
-		$('<caption>').html(data.name).appendTo(dom);
+		$('<caption style="color:blue">').html(data.name).appendTo(dom);
 		var items = data.projects.projects;
 		items.each(function(item){
 			var row = $('<tr/>');
