@@ -6,8 +6,7 @@ var tableView = function($){
 	function createDom(data){
 		var dom = $('<table id="status" style="color:white; background-color:gray" width="100%" cellpadding="5" />');
 		$('<caption style="color:blue">').html(data.name).appendTo(dom);
-		var items = data.projects.projects;
-		items.each(function(item){
+		data.projects.eachProject(function(item){
 			var row = $('<tr/>');
 			$('<td>').html(item.name).appendTo(row);
 			var color = item.isBuilding() ? 'yellow' : 

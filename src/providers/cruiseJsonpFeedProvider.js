@@ -3,6 +3,7 @@ var createCruiseJsonpFeedProvider = function($){
 		$.ajax({
 			url: url,
 			dataType: 'jsonp',
+			jsonpCallback: 'jsonpcallback',
 			success: function(data){
 				callback(data);
 			}

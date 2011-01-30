@@ -100,6 +100,10 @@ Projects.prototype = {
 		};
 	},
 	
+	eachProject: function(callback){
+		this.projects.each(callback);
+	},
+	
 	isFailed: function(){
 		return this.projects.any(function(prj){return prj.isFailed()});
 	},
