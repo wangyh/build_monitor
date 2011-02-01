@@ -1,11 +1,7 @@
 function newDaemon(){
-	var pollInterval;
-	var feedProvider;
-	var handlers;
-	var name;
 	var lastProjectStatus;
 	var jobQueue = [];
-	var filter;
+	var configProvider;
 		
 	function getInterestedProjects(projectsJson,filter){
 		var projects = filter ? new Projects(projectsJson).grepByFilter(filter)
@@ -19,17 +15,19 @@ function newDaemon(){
 		exec();
 	}
 	function poll(){
-		feedProvider(function(projectJson){
-			var projects = getInterestedProjects(projectJson, filter);
+		var config = configProvider.getConfig();
+		config.feedProvider(function(projectJson){
+			var projects = getInterestedProjects(projectJson, config.filter);
 			jobQueue.push(projects);
 		});	
 		
 		setTimeout(function(){
 			poll();
-		}, pollInterval * 1000);		
+		}, config.interval * 1000);		
 	}
 	
 	function exec(){
+		var config = configProvider.getConfig();
 		if(jobQueue.length > 0)
 		{
 			var projects = jobQueue.shift();
@@ -37,9 +35,9 @@ function newDaemon(){
 												  :{failed:[], fixed:[], successful:[], failedAgain:[]};
 			lastProjectStatus = projects;
 
-			handlers.each(function(handler){
+			config.handlers.each(function(handler){
 				handler({
-					name: name, 
+					name: config.name, 
 					projects: projects, 
 					changedProjects: changedProjects
 				});
@@ -51,18 +49,30 @@ function newDaemon(){
 	}
 	
 	return {
-		start: function(config){
-			name = config.name || "Unknown Project";
-			pollInterval = config.interval || 60;
-			feedProvider = config.feedProvider;
-			handlers = config.handlers || [];
-			filter = config.filter;
+		start: function(theConfigProvider){
+			configProvider = theConfigProvider;
 			run();
 		}
 	};
 }
 
+function newStaticConfigDaemon(){
+	var daemon = newDaemon();
+	return {
+		start: function(config){
+			daemon.start(staticConfig(config));
+		}
+	}
+}
 
+function newDynamicConfigDaemon(){
+	var daemon = newDaemon();
+	return {
+		start: function(config){
+			daemon.start(dynamicConfig(config));
+		}
+	}
+}
 
 function Projects(projectsJson){
 	this.projects = projectsJson.map(function(project){return new Project(project)});
