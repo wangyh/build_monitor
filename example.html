@@ -4,7 +4,7 @@
 	<script src="http://code.jquery.com/jquery-1.4.4.min.js" type="text/javascript" charset="utf-8"></script>
 	<script src="src/lib/array.js" type="text/javascript" charset="utf-8"></script>
 	<script src="src/daemon.js" type="text/javascript" charset="utf-8"></script>
-	<script src="src/providers/cruiseJsonpFeedProvider.js" type="text/javascript" charset="utf-8"></script>
+	<script src="src/providers/jsonpFeedProvider.js" type="text/javascript" charset="utf-8"></script>
 	<script src="src/handlers/tableView.js" type="text/javascript" charset="utf-8"></script>
 	<script src="src/handlers/simpleView.js" type="text/javascript" charset="utf-8"></script>
 	<script src="src/handlers/playMusic.js" type="text/javascript" charset="utf-8"></script>
@@ -14,7 +14,7 @@
 		newDaemon()
 		.start({
 			name : 'Example Project',
-			feedProvider: cruiseJsonpFeedProvider({
+			feedProvider: jsonpFeedProvider({
 								url: 'http://www.foo.com/cruise/cctray.xml', 
 								proxy:'http://localhost:7777',
 								filter: {include: [/job1/], exclude: [/pipeline2/]}
