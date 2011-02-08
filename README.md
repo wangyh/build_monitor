@@ -1,7 +1,7 @@
 build_monitor
 =============
 
-build_monitor is used to get the status and notification from continuous integration server. 
+build_monitor is used to get the status and notification from continuous integration server. Currently build_monitor only supports and is tested against [Cruise/GO](http://www.thoughtworks-studios.com/go-agile-release-management).
 
 Prerequisite
 ----------
@@ -68,4 +68,4 @@ Create an empty HTML file, include all the javascript source file as your need, 
 	</body>
 	</html>
 
-build_monitor use jsonp to get the feed from CI server, so you need two urls, one for the feed and the other for the proxy. Also you need to tell daemon how often to retrieve the feed via *interval*. In the example, we use two *handlers*. One is *tableView* which will show the status of each project in the feed. The other is playMusic, so when the build success or failed, build_monitor will play sound to notify you. Current modern browsers supports different format of sound. For example, Firefox can play .ogg while Chrome can play .mp3. So you can add more than one sound url to make it work in multiple browsers.
+build_monitor use jsonp to get the feed from CI server, so you need two urls, one for the feed and the other for the proxy. Also you need to tell daemon how often to retrieve the feed via *interval*. In the example, we use two *handlers*. One is *tableView* which will show the status of each project in the feed. The other is *playMusic*, so when the build success or failed, build_monitor will play sound to notify you. Current modern browsers supports different format of sound. For example, Firefox can play .ogg while Chrome can play .mp3. So you can add more than one sound url to make it work in multiple browsers.
