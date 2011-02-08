@@ -56,6 +56,20 @@ function newDaemon(){
 	};
 }
 
+function staticConfig(config){
+	return {
+		getConfig: function(){
+			return {
+				name : config.name || "UNKNOWN PROJECT",
+				feedProvider: config.feedProvider,
+				handlers: config.handlers || [],
+				filter : config.filter || {},
+				interval : config.interval || 30
+			};
+		}
+	}
+}
+
 function newStaticConfigDaemon(){
 	var daemon = newDaemon();
 	return {

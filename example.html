@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<script src="http://code.jquery.com/jquery-1.4.4.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="src/lib/jquery-1.4.4.min.js" type="text/javascript" charset="utf-8"></script>
 	<script src="src/lib/array.js" type="text/javascript" charset="utf-8"></script>
 	<script src="src/daemon.js" type="text/javascript" charset="utf-8"></script>
 	<script src="src/providers/jsonpFeedProvider.js" type="text/javascript" charset="utf-8"></script>
@@ -14,13 +14,15 @@
 		newStaticConfigDaemon()
 		.start({
 			name : 'Example Project',
+			filter: {include: [/job1/], exclude: [/pipeline2/]},
+			interval: 60,
 			feedProvider: jsonpFeedProvider({
 								url: 'http://www.foo.com/cruise/cctray.xml', 
-								proxy:'http://localhost:7777',
-								filter: {include: [/job1/], exclude: [/pipeline2/]}
+								proxy:'http://localhost:7777'
 								}),
-			handlers: [tableView,
-					   playMusic({	
+			handlers: [
+						tableView,
+					   	playMusic({	
 							successful:{
 								url:['http://site/success.mp3', 'http://site/success.ogg']
 								start: 120,
@@ -41,9 +43,8 @@
 								start : 120,
 								stop: 130
 							}
-					})
-					 ],
-			interval: 60
+							})
+					 ]
 		});
 	</script>
 </body>

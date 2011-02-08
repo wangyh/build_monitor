@@ -12,7 +12,9 @@ function staticConfig(config){
 	}
 }
 
-function dynamicConfig(config){
+function dynamicConfig(){
+	var storage = window.localStorage || {};
+	
 	localStorage["config.interval"] = config.interval || 30;
 	localStorage["config.filter.include"] = JSON.stringify((config.filter && config.filter.include) ? config.filter.include : []);
 	localStorage["config.filter.exclude"] = JSON.stringify((config.filter && config.filter.exclude)? config.filter.exclude: []);
