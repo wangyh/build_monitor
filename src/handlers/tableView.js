@@ -18,8 +18,10 @@ var tableView = function($){
 		dom.appendTo($('body'));	
 	}
 	
-	return function(data){
-		removeDom();
-		createDom(data);
-	}
+	return function(){
+		return function(data){
+				removeDom();
+				createDom(data);
+			}
+		};
 }(jQuery);

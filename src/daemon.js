@@ -1,7 +1,8 @@
 function newDaemon(){
 	var lastProjectStatus;
 	var jobQueue = [];
-	var configProvider;
+	var config;
+	var pollTimeoutId, execTimeoutId;
 		
 	function getInterestedProjects(projectsJson,filter){
 		var projects = filter ? new Projects(projectsJson).grepByFilter(filter)
@@ -15,7 +16,6 @@ function newDaemon(){
 		exec();
 	}
 	function poll(){
-		var config = configProvider.getConfig();
 		config.feedProvider(function(projectJson){
 			var projects = getInterestedProjects(projectJson, config.filter);
 			jobQueue.push(projects);
@@ -27,7 +27,6 @@ function newDaemon(){
 	}
 	
 	function exec(){
-		var config = configProvider.getConfig();
 		if(jobQueue.length > 0)
 		{
 			var projects = jobQueue.shift();
@@ -48,45 +47,32 @@ function newDaemon(){
 		}, 1000);
 	}
 	
+	
+	function merge(config){
+		return {
+			name : config.name || "UNKNOWN PROJECT",
+			feedProvider: config.feedProvider,
+			handlers: config.handlers || [],
+			filter : config.filter || {},
+			interval : config.interval || 30
+		};
+	}
+	
 	return {
-		start: function(theConfigProvider){
-			configProvider = theConfigProvider;
+		start: function(theConfig){
+			this.stop();
+			config = merge(theConfig);
 			run();
+		},
+		
+		stop: function(){
+			clearTimeout(pollTimeoutId);
+			clearTimeout(execTimeoutId);
+			jobQueue = [];
 		}
 	};
 }
 
-function staticConfig(config){
-	return {
-		getConfig: function(){
-			return {
-				name : config.name || "UNKNOWN PROJECT",
-				feedProvider: config.feedProvider,
-				handlers: config.handlers || [],
-				filter : config.filter || {},
-				interval : config.interval || 30
-			};
-		}
-	}
-}
-
-function newStaticConfigDaemon(){
-	var daemon = newDaemon();
-	return {
-		start: function(config){
-			daemon.start(staticConfig(config));
-		}
-	}
-}
-
-function newDynamicConfigDaemon(){
-	var daemon = newDaemon();
-	return {
-		start: function(config){
-			daemon.start(dynamicConfig(config));
-		}
-	}
-}
 
 function Projects(projectsJson){
 	this.projects = projectsJson.map(function(project){return new Project(project)});

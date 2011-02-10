@@ -1,9 +1,9 @@
-var playMusic = function($){
-	function play(config){
+var playAudio = function($){
+	function play(url, start, stop){
 		$('audio').remove();
-		var audio = createAudioElement(config);
-		var startTime = config.start || 0;
-		var endTime = config.stop;
+		var audio = createAudioElement(url);
+		var startTime = start || 0;
+		var endTime = stop;
 		
 		waitForCondition(function(){
 				return audio.duration;
@@ -22,10 +22,9 @@ var playMusic = function($){
 		});
 	}
 	
-	function createAudioElement(config){
+	function createAudioElement(url){
 			var audio = document.createElement('audio');
-			//$(audio).attr('controls', 'controls');
-			var sources = (config.url instanceof Array ? config.url : [config.url]);
+			var sources = (url instanceof Array ? url : [url]);
 			sources.each(function(ele){
 				$('<source>')
 				.attr('src', ele)
@@ -47,6 +46,15 @@ var playMusic = function($){
 		}, 1000);
 	}
 	
+	return function(url, start, stop){
+		play(url, start, stop);
+	}
+}(jQuery);
+
+var playMusic = function($){
+	function play(music){
+		playAudio(music.url, music.start, music.stop);
+	}
 	return function(config){
 		return function(data){
 			if(data.changedProjects.failed.length && config.failed){

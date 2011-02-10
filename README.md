@@ -29,32 +29,29 @@ Create an empty HTML file, include all the javascript source file as your need, 
 	</head>
 	<body>
 		<script type="text/javascript" charset="utf-8">
-			newStaticConfigDaemon()
+			newDaemon()
 			.start({
 				name : 'Example Project',
 				filter: {include: [/job1/], exclude: [/pipeline2/]},
-				interval: 60,
+				interval: 30,
 				feedProvider: jsonpFeedProvider({
 									url: 'http://www.foo.com/cruise/cctray.xml', 
 									proxy:'http://localhost:7777'
-												}),
+									}),
 				handlers: [
-							tableView,
+							tableView(),
 						   	playMusic({	
 								successful:{
-									url:['http://site/success.mp3', 'http://site/success.ogg']
+									url:['http://site/success.mp3', 'http://site/success.ogg'],
 									start: 120,
 									stop: 130
 								},
 				   				fixed:{
 									url:'http://site/fixed.mp3',
-									start : 120,
-									stop: 130
+									start : 120
 								},
 								failedAgain:{
-									url:'http://site/failedAgain.mp3',
-									start: 120,
-									stop: 130
+									url:'http://site/failedAgain.mp3'
 								},
 				   				failed:{
 									url:'http://site/failure.mp3',
