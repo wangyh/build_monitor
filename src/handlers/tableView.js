@@ -1,7 +1,9 @@
 var tableView = function($){
-	var green = "background: -moz-linear-gradient(100% 100% 90deg, #0e0, #090); background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#090), to(#0e0));"
-	var yellow = "background: -moz-linear-gradient(100% 100% 90deg, #ee0, #990); background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#990), to(#ee0));"
-	var red = "background: -moz-linear-gradient(100% 100% 90deg, #e00, #900);background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#900), to(#e00));"
+	var template = "background: -moz-linear-gradient(100% 100% 90deg, {lightcolor}, {darkcolor}); background: -webkit-gradient(linear, 0% 0%, 0% 100%, from({darkcolor}), to({lightcolor}));-moz-border-radius: 5px ;-webkit-border-radius: 5px;"
+	var green = template.replace(/{lightcolor}/g, '#0e0').replace(/{darkcolor}/g, '#090');
+	var yellow = template.replace(/{lightcolor}/g, '#ee0').replace(/{darkcolor}/g, '#990');
+	var red = template.replace(/{lightcolor}/g, '#e00').replace(/{darkcolor}/g, '#900');
+	
 	function removeDom() {
 		$('#status').remove();	
 	}
