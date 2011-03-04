@@ -5,7 +5,7 @@
 	<script src="src/lib/array.js" type="text/javascript" charset="utf-8"></script>
 	<script src="src/daemon.js" type="text/javascript" charset="utf-8"></script>
 	<script src="src/providers/jsonpFeedProvider.js" type="text/javascript" charset="utf-8"></script>
-	<script src="src/handlers/tableView.js" type="text/javascript" charset="utf-8"></script>
+	<script src="src/handlers/listView.js" type="text/javascript" charset="utf-8"></script>
 	<script src="src/handlers/simpleView.js" type="text/javascript" charset="utf-8"></script>
 	<script src="src/handlers/playMusic.js" type="text/javascript" charset="utf-8"></script>
 </head>
@@ -21,7 +21,7 @@
 								proxy:'http://localhost:7777'
 								}),
 			handlers: [
-						tableView(),
+						listView(),
 					   	playMusic({	
 							successful:{
 								url:['http://site/success.mp3', 'http://site/success.ogg'],

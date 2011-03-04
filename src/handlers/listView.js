@@ -1,5 +1,5 @@
-var tableView = function($){
-	var template = "margin:3px; padding:3px; height:30px; line-height:30px; list-style:none; background: -moz-linear-gradient(100% 100% 90deg, {lightcolor}, {darkcolor}); background: -webkit-gradient(linear, 0% 0%, 0% 100%, from({darkcolor}), to({lightcolor}));-moz-border-radius: 5px ;-webkit-border-radius: 5px;"
+var listView = function($){
+	var template = "margin:3px; padding-left:20px; height:30px; line-height:30px; list-style:none; background: -moz-linear-gradient(100% 100% 90deg, {lightcolor}, {darkcolor}); background: -webkit-gradient(linear, 0% 0%, 0% 100%, from({darkcolor}), to({lightcolor}));-moz-border-radius: 5px ;-webkit-border-radius: 5px;"
 	var green = template.replace(/{lightcolor}/g, '#0e0').replace(/{darkcolor}/g, '#090');
 	var yellow = template.replace(/{lightcolor}/g, '#ee0').replace(/{darkcolor}/g, '#990');
 	var red = template.replace(/{lightcolor}/g, '#e00').replace(/{darkcolor}/g, '#900');
