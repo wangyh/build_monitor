@@ -9,16 +9,17 @@ var tableView = function($){
 	}
 	
 	function createDom(data){
-		var dom = $('<table id="status" style="color:#333; width="100%" cellpadding="5" />');
+		var dom = $('<table id="status" style="color:#333;" width="100%" cellpadding="5" />');
 		var caption = $('<h2>').html(data.name);
 		$('<caption>').append(caption).appendTo(dom);
 		data.projects.eachProject(function(item){
 			var row = $('<tr/>');
-			$('<td>').html(item.name).appendTo(row);
+			var cell = $('<td>');
+			cell.html(item.name).appendTo(row);
 			var color = item.isBuilding() ? yellow : 
 						item.isSuccessful() ? green : 
 						red;
-			row.attr('style', color);
+			cell.attr('style', color);
 			row.appendTo(dom);
 		});
 		dom.appendTo($('body'));	
