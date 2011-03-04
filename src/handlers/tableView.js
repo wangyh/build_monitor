@@ -4,11 +4,11 @@ var tableView = function($){
 	var yellow = template.replace(/{lightcolor}/g, '#ee0').replace(/{darkcolor}/g, '#990');
 	var red = template.replace(/{lightcolor}/g, '#e00').replace(/{darkcolor}/g, '#900');
 	
-	function removeDom() {
-		$('#status').remove();	
+	function removeDom(root) {
+		root.find('#status').remove();	
 	}
 	
-	function createDom(data){
+	function createDom(data, root){
 		var dom = $('<table id="status" style="color:#333;" width="100%" cellpadding="5" />');
 		var caption = $('<h2>').html(data.name);
 		$('<caption>').append(caption).appendTo(dom);
@@ -22,13 +22,14 @@ var tableView = function($){
 			cell.attr('style', color);
 			row.appendTo(dom);
 		});
-		dom.appendTo($('body'));	
+		dom.appendTo(root);	
 	}
 	
-	return function(){
+	return function(container){
+		var root = container || $('body');
 		return function(data){
-				removeDom();
-				createDom(data);
+				removeDom(root);
+				createDom(data, root);
 			}
 		};
 }(jQuery);
