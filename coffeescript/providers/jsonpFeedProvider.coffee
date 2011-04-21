@@ -1,4 +1,5 @@
 getFeed = (url, callback) ->
+	log("loading from #{url}")
 	$.ajax({
 		url: url
 		dataType: 'jsonp'

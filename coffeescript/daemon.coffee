@@ -12,6 +12,7 @@ run = () ->
 	exec()
 	
 poll = () ->
+	log("poll...")
 	config.feedProvider (projectJson) ->
 							projects = getInterestedProjects(projectJson, config.filter)
 							jobQueue.push(projects)
@@ -20,8 +21,9 @@ poll = () ->
 
 exec = () ->
 	if jobQueue.length > 0
+		log("update...")
 		projects = jobQueue.shift()
-		changedProjects = if lastProjectStatus then projects.getChangedProjects(lastProjectStaus) else failed: [], fixed: [], successful:[], failedAgain: []
+		changedProjects = if lastProjectStatus then projects.getChangedProjects(lastProjectStatus) else failed: [], fixed: [], successful:[], failedAgain: []
 	
 		lastProjectStatus = projects
 		
