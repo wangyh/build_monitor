@@ -75,10 +75,10 @@ function newDaemon(){
 
 
 function Projects(projectsJson){
-	this.projects = projectsJson.map(function(project){return new Project(project)});
+	this.projects = _.map(projectsJson, function(project){return new Project(project)});
 	this.projectMap = {};
 	var self = this;
-	this.projects.each(function(prj){
+	_.each(this.projects, function(prj){
 		self.projectMap[prj.name] = prj;
 	});
 }
@@ -87,14 +87,14 @@ Projects.prototype = {
 	grepByFilter: function(filter){
 		var includes = filter.include || [];
 		var excludes = filter.exclude || [];
- 		return new Projects(this.projects
-			.findAll(function(prj){return prj.match(includes) && (excludes.length === 0  || !prj.match(excludes))})
+ 		return new Projects(_(this.projects)
+			.select(function(prj){return prj.match(includes) && (excludes.length === 0  || !prj.match(excludes))})
 			.map(function(prj){return prj.json})
 		);
 	},
 	getChangedProjects: function(lastStatus){
 		function getAllChangedProjects(currentStatus, lastStatus){
-			return currentStatus.projects.findAll(function(prj){
+			return _(currentStatus.projects).select(function(prj){
 				return lastProjectStatus(prj) && lastProjectStatus(prj).buildtime !== prj.buildtime;
 			});
 		}
@@ -103,19 +103,19 @@ Projects.prototype = {
 		}
 		var changed = getAllChangedProjects(this, lastStatus);
 		return {
-			failed: changed.findAll(function(prj){return lastProjectStatus(prj).isSuccessful() && prj.isFailed()}),
-			successful: changed.findAll(function(prj){return lastProjectStatus(prj).isSuccessful() && prj.isSuccessful()}),
-			fixed: changed.findAll(function(prj){return lastProjectStatus(prj).isFailed() && prj.isSuccessful()}),
-			failedAgain: changed.findAll(function(prj){return lastProjectStatus(prj).isFailed() && prj.isFailed()})
+			failed: _.select(changed, function(prj){return lastProjectStatus(prj).isSuccessful() && prj.isFailed()}),
+			successful: _.select(changed, function(prj){return lastProjectStatus(prj).isSuccessful() && prj.isSuccessful()}),
+			fixed: _.select(changed, function(prj){return lastProjectStatus(prj).isFailed() && prj.isSuccessful()}),
+			failedAgain: _.select(changed, function(prj){return lastProjectStatus(prj).isFailed() && prj.isFailed()})
 		};
 	},
 	
 	eachProject: function(callback){
-		this.projects.each(callback);
+		_.each(this.projects, callback);
 	},
 	
 	isFailed: function(){
-		return this.projects.any(function(prj){return prj.isFailed()});
+		return _.any(this.projects, function(prj){return prj.isFailed()});
 	},
 	
 	isSuccessful: function(){
@@ -123,15 +123,15 @@ Projects.prototype = {
 	},
 	
 	isBuilding: function(){
-		return this.projects.any(function(prj){return prj.isBuilding()});
+		return _.any(this.projects, function(prj){return prj.isBuilding()});
 	},
 	
 	failedProjects: function(){
-		return this.projects.findAll(function(prj){return prj.isFailed()});
+		return _.select(this.projects, function(prj){return prj.isFailed()});
 	},
 	
 	successfulProjects: function(){
-		return this.projects.findAll(function(prj){return prj.isSuccessful()});
+		return _.select(this.projects, function(prj){return prj.isSuccessful()});
 	}
 };
 
@@ -159,7 +159,7 @@ Project.prototype = {
 			return true;
 		}
 		var self = this;
-		return regExs.any(function(regEx){ return regEx.test(self.name);});
+		return _.any(regExs, function(regEx){ return regEx.test(self.name);});
 	},
 	
 	isBuilding: function(){

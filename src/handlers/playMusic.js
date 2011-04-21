@@ -25,7 +25,7 @@ var playAudio = function($){
 	function createAudioElement(url){
 			var audio = document.createElement('audio');
 			var sources = (url instanceof Array ? url : [url]);
-			sources.each(function(ele){
+			_.each(sources, function(ele){
 				$('<source>')
 				.attr('src', ele)
 				.attr('type', /.mp3$/.test(ele) ? 'audio/mpeg' : /.ogg$/.test(ele) ? 'audio/ogg' : '')
