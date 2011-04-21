@@ -34,7 +34,7 @@ function newDaemon(){
 												  :{failed:[], fixed:[], successful:[], failedAgain:[]};
 			lastProjectStatus = projects;
 
-			config.handlers.each(function(handler){
+			_.each(config.handlers, function(handler){
 				handler({
 					name: config.name, 
 					projects: projects, 
