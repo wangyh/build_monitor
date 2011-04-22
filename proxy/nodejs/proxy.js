@@ -1,8 +1,7 @@
-var PORT = 7777;
 var http = require('http');
-var url = require('url')
-var util = require('util')
-
+var url = require('url');
+var util = require('util');
+var PORT = process.argv[2] || 12512;
 
 function getParameters(request){
 	var queryString = url.parse(request.url, true).query;
@@ -55,6 +54,8 @@ http.createServer(function (request, response){
 	getJson(params.url, function(statuscode,headers, body){
 		var responseBody = str("{0}({1})", params.callback, JSON.stringify(require('./lib/xml2json').xml2json.parser(body)));
 		headers["Content-Length"] = responseBody.length;
+		headers["Content-type"] = 'application/javascript'
+		
 		log.info('send back: {0} \n{1}', JSON.stringify(headers), responseBody);
 		
 		response.writeHead(statuscode, headers);

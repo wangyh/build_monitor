@@ -1,7 +1,7 @@
-PORT = 7777
 http = require 'http'
 url = require 'url'
 util = require 'util'
+PORT = process.argv[2] or 12512
 
 getParameters = (request) ->
 	queryString = url.parse(request.url, true).query
@@ -51,7 +51,10 @@ server = http.createServer (request, response) ->
 	getJson params.url, (statuscode, headers, body) ->
 		resBody = JSON.stringify require('./lib/xml2json').xml2json.parser(body)
 		responseBody = "#{params.callback}(#{resBody})"
+		
 		headers["Content-Length"] = responseBody.length
+		headers["Content-type"] = 'application/javascript'
+		
 		util.log "send back: #{JSON.stringify(headers)} \n#{responseBody}"
 		
 		response.writeHead statuscode, headers
