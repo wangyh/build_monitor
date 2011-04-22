@@ -10,6 +10,7 @@ Prerequisite
 	Node.js is required for proxy.js. CoffeeScript is required for proxy.coffee
 
 	node proxy.js [port]
+	
 	coffee proxy.coffee [port]
 
 * a browser support HTML5 for sound notification.
@@ -17,9 +18,11 @@ Prerequisite
 Build
 
 * build coffee script to javascript
+	
 	cake build
 
 * clean 
+	
 	cake clean
 
 Example
