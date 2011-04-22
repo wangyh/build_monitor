@@ -1,15 +1,26 @@
 build_monitor
 =============
 
-build_monitor is used to get the status and notification from continuous integration server. Currently build_monitor only supports and is tested against [Cruise/GO](http://www.thoughtworks-studios.com/go-agile-release-management).
+build_monitor is used to get the status and notification from continuous integration server. Currently build_monitor is only tested against [Cruise/GO](http://www.thoughtworks-studios.com/go-agile-release-management) and Hudson. But in theory it supports all CI servers which provides Cruise Control XML feed.
 
 Prerequisite
 ----------
-* a jsonp proxy - there is one located at /proxy/nodejs/proxy.js. You can run it with nodejs by input following command in terminal.
+* a jsonp proxy - there are two built-in proxies located at /proxy/nodejs. 
+	
+	Node.js is required for proxy.js. CoffeeScript is required for proxy.coffee
 
-	node proxy.js
+	node proxy.js [port]
+	coffee proxy.coffee [port]
 
 * a browser support HTML5 for sound notification.
+
+Build
+
+* build coffee script to javascript
+	cake build
+
+* clean 
+	cake clean
 
 Example
 -------
@@ -19,13 +30,14 @@ Create an empty HTML file, include all the javascript source file as your need, 
 	<!DOCTYPE html>
 	<html>
 	<head>
-		<script src="src/lib/jquery-1.4.4.min.js" type="text/javascript" charset="utf-8"></script>
-		<script src="src/lib/array.js" type="text/javascript" charset="utf-8"></script>
-		<script src="src/daemon.js" type="text/javascript" charset="utf-8"></script>
-		<script src="src/providers/jsonpFeedProvider.js" type="text/javascript" charset="utf-8"></script>
-		<script src="src/handlers/tableView.js" type="text/javascript" charset="utf-8"></script>
-		<script src="src/handlers/simpleView.js" type="text/javascript" charset="utf-8"></script>
-		<script src="src/handlers/playMusic.js" type="text/javascript" charset="utf-8"></script>
+		<script src="lib/jquery-1.4.4.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="lib/underscore-min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="build/log.js" type="text/javascript" charset="utf-8"></script>
+		<script src="build/daemon.js" type="text/javascript" charset="utf-8"></script>
+		<script src="build/providers/jsonpFeedProvider.js" type="text/javascript" charset="utf-8"></script>
+		<script src="build/handlers/listView.js" type="text/javascript" charset="utf-8"></script>
+		<script src="build/handlers/simpleView.js" type="text/javascript" charset="utf-8"></script>
+		<script src="build/handlers/playMusic.js" type="text/javascript" charset="utf-8"></script>
 	</head>
 	<body>
 		<script type="text/javascript" charset="utf-8">
@@ -36,7 +48,7 @@ Create an empty HTML file, include all the javascript source file as your need, 
 				interval: 30,
 				feedProvider: jsonpFeedProvider({
 									url: 'http://www.foo.com/cruise/cctray.xml', 
-									proxy:'http://localhost:7777'
+									proxy:'http://localhost:12512'
 									}),
 				handlers: [
 							tableView(),

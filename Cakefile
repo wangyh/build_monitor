@@ -7,14 +7,12 @@ folders = [
 	]
 
 task 'clean', 'clean build artifects', (options) ->
-	for folder in folders
-		do (folder) ->
-			exec("rm ./src#{folder}*.js")
+	exec("rm -rf ./build")
 			
 task 'build', 'build the project', (options) ->
 	for folder in folders
 		do (folder) ->
-			exec("coffee -o ./src#{folder} -c ./coffeescript#{folder}*.coffee")
+			exec("coffee -o ./build#{folder} -c ./src#{folder}*.coffee")
 	
 	
 	

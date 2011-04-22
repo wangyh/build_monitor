@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<script src="src/lib/jquery-1.4.4.min.js" type="text/javascript" charset="utf-8"></script>
-	<script src="src/lib/underscore-min.js" type="text/javascript" charset="utf-8"></script>
-	<script src="src/daemon.js" type="text/javascript" charset="utf-8"></script>
-	<script src="src/providers/jsonpFeedProvider.js" type="text/javascript" charset="utf-8"></script>
-	<script src="src/handlers/listView.js" type="text/javascript" charset="utf-8"></script>
-	<script src="src/handlers/simpleView.js" type="text/javascript" charset="utf-8"></script>
-	<script src="src/handlers/playMusic.js" type="text/javascript" charset="utf-8"></script>
+	<script src="lib/jquery-1.4.4.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="lib/underscore-min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="build/log.js" type="text/javascript" charset="utf-8"></script>
+	<script src="build/daemon.js" type="text/javascript" charset="utf-8"></script>
+	<script src="build/providers/jsonpFeedProvider.js" type="text/javascript" charset="utf-8"></script>
+	<script src="build/handlers/listView.js" type="text/javascript" charset="utf-8"></script>
+	<script src="build/handlers/simpleView.js" type="text/javascript" charset="utf-8"></script>
+	<script src="build/handlers/playMusic.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body>
 	<script type="text/javascript" charset="utf-8">
@@ -18,7 +19,7 @@
 			interval: 30,
 			feedProvider: jsonpFeedProvider({
 								url: 'http://www.foo.com/cruise/cctray.xml', 
-								proxy:'http://localhost:7777'
+								proxy:'http://localhost:12512'
 								}),
 			handlers: [
 						listView(),
