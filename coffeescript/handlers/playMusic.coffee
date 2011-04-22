@@ -15,6 +15,7 @@ createAudioElement = (url) ->
 			.attr('type', getAudioType(ele) )
 			.appendTo($(audio)))
 	$(audio).appendTo($('body'))
+	audio
 	
 waitForCondition = (condition, callback) ->
 	setTimeout(() -> if condition() then callback() else waitForCondition(condition, callback),
@@ -37,7 +38,7 @@ play = (url, start, stop) ->
 			
 	waitForCondition(audioLoaded, playAudio)
 
-playAudio = (audio) ->
+@playAudio = (audio) ->
 	play(audio.url, audio.start, audio.stop)
 	
 @playMusic = (config) ->
