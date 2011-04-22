@@ -1,21 +1,11 @@
 var PORT = 7777;
-var LOG_LEVEL = 'INFO';
 var http = require('http');
-http.createServer(function (request, response){
-	var params = getParameters(request);
-	log.info('----------------------------------------------');
-	log.info('new requst for {0}, callback: {1}', params.url, params.callback);
-	getJson(params.url, function(statuscode,headers, body){
-		var responseBody = str("{0}({1})", params.callback, JSON.stringify(require('./lib/xml2json').xml2json.parser(body)));
-		headers["Content-Length"] = responseBody.length;
-		log.info('send back: {0} \n{1}', JSON.stringify(headers), responseBody);
-		
-		response.writeHead(statuscode, headers);
-		response.end(responseBody);
-	});
-}).listen(PORT);
+var url = require('url')
+var util = require('util')
+
+
 function getParameters(request){
-	var queryString = require('url').parse(request.url, true).query;
+	var queryString = url.parse(request.url, true).query;
 	return {
 		url: queryString.url,
 		callback : queryString.callback || "foo",
@@ -23,8 +13,8 @@ function getParameters(request){
 		password: queryString.password
 	}
 }
-function getJson(url, callback){
-	var target = require('url').parse(url);
+function getJson(uri, callback){
+	var target = url.parse(uri);
 	var config = {
 		host: target.hostname,
 		port : target.port || 80,
@@ -33,10 +23,10 @@ function getJson(url, callback){
 	};
 	var client = http.createClient(config.port, config.host);
 	client.on('error', function(err) {
-	        log.error("{0} -- {1}", url, err);
+	        log.error("{0} -- {1}", uri, err);
 	    });
 	
-	log.info('requesting {0}...', url);
+	log.info('requesting {0}...', uri);
 	log.info(JSON.stringify(config));
 	var header = {'host': config.host};
 	if(config.auth){
@@ -45,7 +35,7 @@ function getJson(url, callback){
 	}
 	var request = client.request('GET', config.path, header);
 	request.on('response', function(response){
-		log.info('get response for {0}...', url);
+		log.info('get response for {0}...', uri);
 		log.info('status: {0}', response.statusCode);
 		log.info('headers: {0}', JSON.stringify(response.headers));
 		var data = '';
@@ -58,18 +48,25 @@ function getJson(url, callback){
 	});
 	request.end();
 }
+http.createServer(function (request, response){
+	var params = getParameters(request);
+	log.info('----------------------------------------------');
+	log.info('new request for {0}, callback: {1}', params.url, params.callback);
+	getJson(params.url, function(statuscode,headers, body){
+		var responseBody = str("{0}({1})", params.callback, JSON.stringify(require('./lib/xml2json').xml2json.parser(body)));
+		headers["Content-Length"] = responseBody.length;
+		log.info('send back: {0} \n{1}', JSON.stringify(headers), responseBody);
+		
+		response.writeHead(statuscode, headers);
+		response.end(responseBody);
+	});
+}).listen(PORT);
 var  log = function(){
 	function error(){
-		log.apply(null, arguments);
+		util.debug(str.apply(null, arguments));
 	}
 	function info(){
-		if(LOG_LEVEL !== 'ERROR'){
-			log.apply(null, arguments);
-		}
-	}
-
-	function log(){
-		console.log(str('{0}: {1}',new Date().toTimeString(),str.apply(null, arguments)));
+		util.log(str.apply(null, arguments));
 	}
 	return {
 		error: error,
