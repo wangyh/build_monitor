@@ -1,6 +1,5 @@
 var http = require('http');
 var url = require('url');
-var util = require('util');
 var PORT = process.argv[2] || 12512;
 
 function getParameters(request){
@@ -64,10 +63,10 @@ http.createServer(function (request, response){
 }).listen(PORT);
 var  log = function(){
 	function error(){
-		util.debug(str.apply(null, arguments));
+		console.error(str.apply(null, arguments));
 	}
 	function info(){
-		util.log(str.apply(null, arguments));
+		console.info(str.apply(null, arguments));
 	}
 	return {
 		error: error,

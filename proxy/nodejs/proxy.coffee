@@ -1,8 +1,13 @@
 http = require 'http'
 url = require 'url'
-util = require 'util'
 PORT = process.argv[2] or 12512
 
+log = {
+	error: (message) ->
+		console.error message
+	info: (message) ->
+		console.info message
+}
 getParameters = (request) ->
 	queryString = url.parse(request.url, true).query
 	return {
@@ -22,21 +27,21 @@ getJson = (uri, callback) ->
 	}
 	client = http.createClient config.port, config.host
 	client.on 'error', (err) ->
-		util.debug "#{uri} -- #{err}"
+		log.error "#{uri} -- #{err}"
 		
-	util.log "requesting #{uri}..."
-	util.log JSON.stringify(config)
+	log.info "requesting #{uri}..."
+	log.info JSON.stringify(config)
 	
 	header = {'host' : config.host}
 	if config.auth
 		header["Authorization"] = "Basic " + new Buffer(config.auth).toString('base64')
-		util.log "header:#{JSON.stringify(header)}"
+		log.info "header:#{JSON.stringify(header)}"
 		
 	request = client.request 'GET', config.path, header
 	request.on 'response', (response) ->
-		util.log "get response for #{uri}..."
-		util.log "status: #{response.statusCode}"
-		util.log "headers: #{JSON.stringify(response.headers)}"
+		log.info "get response for #{uri}..."
+		log.info "status: #{response.statusCode}"
+		log.info "headers: #{JSON.stringify(response.headers)}"
 		data = ''
 		response.on 'data', (chunk) ->
 			data += chunk
@@ -46,8 +51,8 @@ getJson = (uri, callback) ->
 	
 server = http.createServer (request, response) ->
 	params = getParameters request
-	util.log '-----------------------------------------'
-	util.log "new request for #{params.url}, callback: #{params.callback}"
+	log.info '-----------------------------------------'
+	log.info "new request for #{params.url}, callback: #{params.callback}"
 	getJson params.url, (statuscode, headers, body) ->
 		resBody = JSON.stringify require('./lib/xml2json').xml2json.parser(body)
 		responseBody = "#{params.callback}(#{resBody})"
@@ -55,11 +60,11 @@ server = http.createServer (request, response) ->
 		headers["Content-Length"] = responseBody.length
 		headers["Content-type"] = 'application/javascript'
 		
-		util.log "send back: #{JSON.stringify(headers)} \n#{responseBody}"
+		log.info "send back: #{JSON.stringify(headers)} \n#{responseBody}"
 		
 		response.writeHead statuscode, headers
 		response.end responseBody
 
 server.listen PORT
 
-util.log "Server running on port #{PORT}"
+log.info "Server running on port #{PORT}"
