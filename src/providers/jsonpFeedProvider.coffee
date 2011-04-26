@@ -3,7 +3,6 @@ getFeed = (url, callback) ->
 	$.ajax({
 		url: url
 		dataType: 'jsonp'
-		jsonpCallback: 'jsonpcallback'
 		success: (data) ->
 			callback(data)
 	})

@@ -53,7 +53,7 @@ http.createServer(function (request, response){
 	getJson(params.url, function(statuscode,headers, body){
 		var responseBody = str("{0}({1})", params.callback, JSON.stringify(require('./lib/xml2json').xml2json.parser(body)));
 		headers["Content-Length"] = responseBody.length;
-		headers["Content-type"] = 'application/javascript'
+		headers["Content-type"] = 'application/javascript';
 		
 		log.info('send back: {0} \n{1}', JSON.stringify(headers), responseBody);
 		

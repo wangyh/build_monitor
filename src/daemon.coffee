@@ -24,7 +24,6 @@ exec = () ->
 		log("update...")
 		projects = jobQueue.shift()
 		changedProjects = if lastProjectStatus then projects.getChangedProjects(lastProjectStatus) else failed: [], fixed: [], successful:[], failedAgain: []
-	
 		lastProjectStatus = projects
 		
 		handler {name: config.name,projects: projects,changedProjects: changedProjects} for handler in config.handlers
