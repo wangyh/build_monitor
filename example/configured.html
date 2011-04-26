@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="lib/jquery-1.4.4.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="lib/underscore-min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="build/log.js" type="text/javascript" charset="utf-8"></script>
+	<script src="build/daemon.js" type="text/javascript" charset="utf-8"></script>
+	<script src="build/providers/jsonpFeedProvider.js" type="text/javascript" charset="utf-8"></script>
+	<script src="build/handlers/listView.js" type="text/javascript" charset="utf-8"></script>
+	<script src="build/handlers/simpleView.js" type="text/javascript" charset="utf-8"></script>
+	<script src="build/handlers/playMusic.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+	<a href="#" id="config_link">configuration</a>
+	<div id="view"></div>
+	<div id="configuration"  style="position:fixed; top:30px; left:10px; display:none">
+		<textarea id="config" cols="100" rows="30">
+{
+	name : 'Local GO',
+	interval: 5,
+	feedProvider: jsonpFeedProvider({		
+					url: 'http://localhost:8153/go/cctray.xml', 
+					proxy:'http://localhost:12512'
+					}),
+	handlers: [
+		listView($("#view")),
+		playMusic({	
+				failed:{
+					url:['fail.mp3', 'fail.ogg']
+				},
+   				failedAgain:{
+					url:['fail.mp3', 'fail.ogg']	
+				},
+				successful:{
+					url:['success.mp3', 'success.ogg']
+				},
+				fixed:{
+					url:['success.mp3', 'success.ogg']			
+				}
+		})
+		 ]
+}
+		</textarea>
+		<br />
+		<input type="button" value="update" id="btn_update"></input>
+	</div>
+	<script type="text/javascript" charset="utf-8">
+		function getConfig(){
+			eval("config=" + $('#config').val())
+			return config;
+		}
+		var daemon = newDaemon();
+		function start(){
+			daemon.stop();
+			daemon.start(getConfig());
+		}
+		$('#btn_update').click(function(){
+			start();
+			$('#configuration').hide();
+			if(window.localStorage){
+				window.localStorage['build-monitor-configuration'] = $('#config').val();
+			}
+		});
+		
+		
+		$('#config_link').click(function(){
+			var text = $('#configuration').val();
+			var lines = text.split("\n").length;
+			$('#configuration').attr('rows', lines)
+			$('#configuration').toggle();
+		});
+		
+		
+		$(document).ready(function(){
+			if(window.localStorage){
+				var config = window.localStorage.getItem('build-monitor-configuration');
+				if(config){
+					$('#config').val(config);
+				}
+			}
+		
+			start();
+		});
+	</script>
+
+	
+</body>
+</html>
